@@ -114,7 +114,7 @@
                     .join('\n');
 
                 const marker = L.marker([element.lat, element.lon]).addTo(map)
-                    .bindPopup(`<b>${name}</b><pre>${info}</pre><button onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${element.lat},${element.lon}', '_blank')"><img src="https://cdn-icons-png.flaticon.com/512/1483/1483336.png" alt="Navigation Logo" style="width: 20px; height: 20px;"> Route to ${name}</button>`) // attribution to https://www.flaticon.com/ for providing this icon free to use
+                    .bindPopup(`<b>${name}</b><pre>${info}</pre><button style="line-height:2" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${element.lat},${element.lon}', '_blank')"><img src="https://cdn-icons-png.flaticon.com/512/1483/1483336.png" alt="Navigation Logo" style="width: 20px; height: 20px;"> Route to ${name}</button>`) // attribution to https://www.flaticon.com/ for providing this icon free to use
                     .openPopup();
             });
         }
