@@ -28,14 +28,21 @@
         // Initialize the map
         let map;
 
-        // Check if geolocation is supported by the browser
+
+        // First, find location from IP
+        findLocationFromIP();
+
+        // Then, if geolocation is supported, ask the user for their location
         if (GEOLOCATION_SUPPORTED) {
-            navigator.geolocation.getCurrentPosition(initializeMap, handleGeolocationError);
-        } else {
-            console.error("Geolocation is not supported by this browser.");
-            findLocationFromIP();
+            navigator.geolocation.getCurrentPosition(updateMap, handleGeolocationError);
         }
 
+        function updateMap(position) {
+            let center = normalizeCoordinates(position);
+            map.setView(center, 13);
+            findAnimalShelters(center);
+        }
+        
         function handleGeolocationError(error) {
             console.error(error);
             findLocationFromIP();
@@ -70,7 +77,7 @@
                 return `<a href="${url.startsWith('http') ? url : `https://${url}`}" target="_blank">${url}</a>`;
             });
         }
-        
+
         function initializeMap(position) {
             let center = normalizeCoordinates(position);
             map = L.map(MAP_ID).setView(center, 13);
