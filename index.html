@@ -28,29 +28,27 @@
         // Initialize the map
         let map;
 
-
         // First, find location from IP
-        findLocationFromIP();
-
-        // Then, if geolocation is supported, ask the user for their location
-        if (GEOLOCATION_SUPPORTED) {
-            navigator.geolocation.getCurrentPosition(updateMap, handleGeolocationError);
-        }
-
-        function updateMap(position) {
-            let center = normalizeCoordinates(position);
-            map.setView(center, 13);
-            findAnimalShelters(center);
-        }
-        
-        function handleGeolocationError(error) {
-            console.error(error);
-            findLocationFromIP();
-        }
+        findLocationFromIP().then(() => {
+            // Then, if geolocation is supported, ask the user for their location
+            if (GEOLOCATION_SUPPORTED) {
+                navigator.geolocation.getCurrentPosition(updateMap, handleGeolocationError);
+            }
+            else {
+                handleIPGeolocationError();
+            }
+        });
 
         function findLocationFromIP() {
-            $.get(IP_GEOLOCATION_URL, initializeMap)
-                .fail(handleIPGeolocationError);
+            return new Promise((resolve, reject) => {
+                $.get(IP_GEOLOCATION_URL, (position) => {
+                    initializeMap(position);
+                    resolve();
+                }).fail(() => {
+                    handleIPGeolocationError();
+                    resolve();
+                });
+            });
         }
 
         function handleIPGeolocationError() {
@@ -58,6 +56,18 @@
             const defaultLocation = [48.5734053, 13.4503279]; // Fallback to Passau in Bayern
             initializeMap({ coords: { latitude: defaultLocation[0], longitude: defaultLocation[1] } });
         }
+
+        function updateMap(position) {
+            let center = normalizeCoordinates(position);
+            map.setView(center, 13);
+            findAnimalShelters(center);
+        }
+
+        function handleGeolocationError(error) {
+            console.error(error);
+            findLocationFromIP();
+        }
+
 
         function normalizeCoordinates(position) {
             let center;
