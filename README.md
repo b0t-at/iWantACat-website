@@ -1,2 +1,2 @@
 # iWantACat-website
-Website for iwanta.cat
+Website for [iwanta.cat](https://iwanta.cat)
