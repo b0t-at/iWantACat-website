@@ -24,6 +24,8 @@
         const GEOLOCATION_SUPPORTED = navigator.geolocation ? true : false;
         const IP_GEOLOCATION_URL = "https://ipapi.co/json/";
         const OVERPASS_API_URL = "https://overpass-api.de/api/interpreter";
+        let isCentered = false;
+        let currentCenteredShelter = undefined;
 
         // Initialize the map
         let map;
@@ -59,8 +61,11 @@
 
         function updateMap(position) {
             let center = normalizeCoordinates(position);
-            map.setView(center, 13);
             findAnimalShelters(center);
+            if(!isCentered) {
+                console.log("cemtering update map");
+                map.setView(center, 13);
+            }
         }
 
         function handleGeolocationError(error) {
@@ -106,8 +111,11 @@
             })
                 .on('markgeocode', function (e) {
                     const center = e.geocode.center;
-                    map.setView(center, 13);
                     findAnimalShelters(center);
+                    if(!isCentered) {
+                        console.log("cemtering geocode");
+                        map.setView(center, 13);
+                    }
                 })
                 .addTo(map);
 
@@ -124,16 +132,29 @@
         }
 
         function handleOverpassResponse(data) {
+            let lastShelter = undefined;
+            let lastmarker = undefined;
             data.elements.forEach(element => {
+                lastShelter = element;
                 const name = element.tags.name || 'Unknown Animal Shelter';
                 const info = Object.keys(element.tags)
                     .map(key => `<div><tt>${key}: ${linkify(element.tags[key])}</tt></div>`)
                     .join('\n');
 
-                const marker = L.marker([element.lat, element.lon]).addTo(map)
-                    .bindPopup(`<b>${name}</b><div>${info}</div><button style="line-height:2; margin-top:10px;" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${element.lat},${element.lon}', '_blank')"><img src="https://cdn-icons-png.flaticon.com/512/1483/1483336.png" alt="Navigation Logo" style="width: 20px; height: 20px;"> Route to ${name}</button>`) // attribution to https://www.flaticon.com/ for providing this icon free to use
-                    .openPopup();
+                    lastmarker = L.marker([element.lat, element.lon]).addTo(map)
+                    .bindPopup(`<b>${name}</b><div>${info}</div><button style="line-height:2; margin-top:10px;" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${element.lat},${element.lon}', '_blank')"><img src="https://cdn-icons-png.flaticon.com/512/1483/1483336.png" alt="Navigation Logo" style="width: 20px; height: 20px;"> Route to ${name}</button>`); // attribution to https://www.flaticon.com/ for providing this icon free to use
+                    
             });
+            if (lastShelter != undefined && (currentCenteredShelter == undefined || (currentCenteredShelter.lat != lastShelter.lat || currentCenteredShelter.lon != lastShelter.lon))) {
+                console.log(lastShelter.tags.name)
+                lastmarker.openPopup();
+                let position = { coords: { latitude: lastShelter.lat, longitude: lastShelter.lon } }
+                let center = normalizeCoordinates(position);
+                console.log("cemtering shelter");
+                map.setView(center, 13);
+                isCentered = true;
+                currentCenteredShelter = lastShelter;
+            }
         }
 
 
