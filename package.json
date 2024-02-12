@@ -1,0 +1,25 @@
+{
+  "name": "iwantacat-website",
+  "version": "0.99.0",
+  "description": "animal shelter finder",
+  "main": "gulpfile.js",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-cheerio": "^1.0.0",
+    "gulp-download": "^0.0.1",
+    "gulp-useref": "^5.0.0"
+  },
+  "scripts": {
+    "predeploy": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/b0t-at/iWantACat-website.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/b0t-at/iWantACat-website/issues"
+  },
+  "homepage": "https://github.com/b0t-at/iWantACat-website#readme"
+}
