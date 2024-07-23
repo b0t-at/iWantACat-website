@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import Main from '../components/Main.vue'
+import MapView from './MapView.vue'
 </script>
 
 <template>
   <main>
     <h1 style="text-align: center;">IWANTA.CAT</h1>
-    <TheWelcome />
+    <MapView />
   </main>
 </template>
