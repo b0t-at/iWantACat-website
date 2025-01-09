@@ -5,18 +5,14 @@
     <title>Animal Shelter Finder</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <link rel="stylesheet" href="assets/styles.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
-    <style>
-        #map {
-            height: 100vh;
-        }
-    </style>
 </head>
 
 <body>
-    <h1 style="text-align: center;">I want a cat!</h1>
+    <h1 class="title">I want a cat!</h1>
     <div id="map"></div>
     <script>
         // Define constants for the map and geolocation services
@@ -131,7 +127,7 @@
                     .join('\n');
 
                 const marker = L.marker([element.lat, element.lon]).addTo(map)
-                    .bindPopup(`<b>${name}</b><div>${info}</div><button style="line-height:2; margin-top:10px;" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${element.lat},${element.lon}', '_blank')"><img src="https://cdn-icons-png.flaticon.com/512/1483/1483336.png" alt="Navigation Logo" style="width: 20px; height: 20px;"> Route to ${name}</button>`) // attribution to https://www.flaticon.com/ for providing this icon free to use
+                    .bindPopup(`<b>${name}</b><div>${info}</div><button class="route-button" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${element.lat},${element.lon}', '_blank')"><img src="https://cdn-icons-png.flaticon.com/512/1483/1483336.png" alt="Navigation Logo" class="route-icon"> Route to ${name}</button>`) // attribution to https://www.flaticon.com/ for providing this icon free to use
                     .openPopup();
             });
         }
