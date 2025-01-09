@@ -23,10 +23,13 @@ Website for [iwanta.cat](https://iwanta.cat)
 ### Development
 1. Run the Gulp tasks to download assets, optimize and minify CSS and JavaScript files:
    ```sh
-   gulp
+   npm run predeploy
    ```
 
-2. Open `index.html` in your browser to view the website.
+2. Run dev webserver
+   ```sh
+   npm run dev
+   ```
 
 ### Deployment
 1. Run the predeploy script to prepare the project for deployment:
