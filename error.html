@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Consent Required</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .container h1 {
+            color: #333;
+        }
+
+        .container p {
+            color: #666;
+        }
+
+        .container button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .container button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="title">Consent Required</h1>
+        <p>We cannot display the map and location services without your consent. Please enable consent to use these features.</p>
+        <p>For more information, please read our <a href="gdpr.html" target="_blank">GDPR policy</a>.</p>
+        <button id="consentButton">Give Consent</button>
+    </div>
+
+    <script>
+        document.getElementById('consentButton').addEventListener('click', function() {
+            setCookie('userConsent', 'yes', 365);
+            window.location.href = 'index.html';
+        });
+
+        function setCookie(name, value, days) {
+            const d = new Date();
+            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + d.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+    </script>
+</body>
+
+</html>
