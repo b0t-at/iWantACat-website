@@ -56,6 +56,7 @@
         function updateMap(position) {
             let center = normalizeCoordinates(position);
             map.setView(center, 13);
+            map.panTo(center);
             findAnimalShelters(center);
         }
 
@@ -87,6 +88,7 @@
         function initializeMap(position) {
             let center = normalizeCoordinates(position);
             map = L.map(MAP_ID).setView(center, 13);
+            map.panTo(center);
 
             // Add OpenStreetMap tile layer to the map
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -129,6 +131,7 @@
                 const marker = L.marker([element.lat, element.lon]).addTo(map)
                     .bindPopup(`<b>${name}</b><div>${info}</div><button class="route-button" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${element.lat},${element.lon}', '_blank')"><img src="https://cdn-icons-png.flaticon.com/512/1483/1483336.png" alt="Navigation Logo" class="route-icon"> Route to ${name}</button>`) // attribution to https://www.flaticon.com/ for providing this icon free to use
                     .openPopup();
+                map.panTo([element.lat, element.lon]);
             });
         }
 
