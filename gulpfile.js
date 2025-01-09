@@ -40,4 +40,11 @@ gulp.task('minify-js', function () {
         .pipe(gulp.dest(packageFolder + staticAssetsFolder));
 });
 
-gulp.task('default', gulp.series('download', 'minify-css', 'minify-js'));
+gulp.task('copy-own-assets', function () {
+    return gulp.src('assets/*')
+        .pipe(gulp.dest(packageFolder + staticAssetsFolder));
+});
+
+//gulp.task('default', gulp.series('download', 'minify-css', 'minify-js'));
+gulp.task('default', gulp.series('download','copy-own-assets'));
+
