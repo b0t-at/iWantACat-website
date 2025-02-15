@@ -111,6 +111,9 @@
         });
 
         function initializeMapWithConsent() {
+            if (map) {
+                removeMap(); // Remove the existing map instance
+            }
             // First, find location from IP
             findLocationFromIP().then(() => {
                 // Then, if geolocation is supported, ask the user for their location
@@ -173,6 +176,9 @@
         }
 
         function initializeMap(position) {
+            if (map) {
+                removeMap(); // Remove the existing map instance
+            }
             let center = normalizeCoordinates(position);
             map = L.map(MAP_ID).setView(center, 13);
             map.panTo(center);
@@ -197,6 +203,13 @@
                 .addTo(map);
 
             findAnimalShelters(center);
+        }
+
+        function removeMap() {
+            if (map) {
+                map.remove();
+                map = null;
+            }
         }
 
         function findAnimalShelters(center) {
