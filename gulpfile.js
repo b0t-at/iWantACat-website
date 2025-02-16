@@ -1,9 +1,6 @@
 var gulp = require('gulp');
 var download = require('gulp-download');
 var cheerio = require('gulp-cheerio');
-var cleanCSS = require('gulp-clean-css');
-var uglify = require('gulp-uglify');
-var concat = require('gulp-concat');
 const packageFolder = 'dist/';
 const staticAssetsFolder = 'assets';
 
