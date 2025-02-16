@@ -62,6 +62,15 @@
         .modal-content button:hover {
             background-color: #0056b3;
         }
+
+        #gdpr-link {
+            position: fixed;
+            bottom: 2px;
+            right: 5px;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
     </style>
 </head>
 
@@ -101,7 +110,7 @@
 
         document.getElementById('consentYes').addEventListener('click', function() {
             document.getElementById('consentModal').style.display = 'none';
-            setCookie('userConsent', 'yes', 365);
+            setCookie('userConsent', 'yes', 30);
             initializeMapWithConsent();
         });
 
@@ -152,7 +161,7 @@
         }
 
         function handleGeolocationError(error) {
-            console.error(error);
+            //console.error(error);
             findLocationFromIP();
         }
 
@@ -257,6 +266,7 @@
             return null;
         }
     </script>
+    <a href="gdpr.html" id="gdpr-link" target="_blank">GDPR</a>
 </body>
 
 </html>
