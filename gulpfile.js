@@ -26,25 +26,15 @@ gulp.task('download', function () {
         .pipe(gulp.dest(packageFolder));
 });
 
-gulp.task('minify-css', function () {
-    return gulp.src('assets/*.css')
-        .pipe(cleanCSS({ compatibility: 'ie8' }))
-        .pipe(concat('styles.min.css'))
-        .pipe(gulp.dest(packageFolder + staticAssetsFolder));
-});
-
-gulp.task('minify-js', function () {
-    return gulp.src('assets/*.js')
-        .pipe(uglify())
-        .pipe(concat('scripts.min.js'))
-        .pipe(gulp.dest(packageFolder + staticAssetsFolder));
-});
-
 gulp.task('copy-own-assets', function () {
     return gulp.src('assets/*')
         .pipe(gulp.dest(packageFolder + staticAssetsFolder));
 });
 
-//gulp.task('default', gulp.series('download', 'minify-css', 'minify-js'));
-gulp.task('default', gulp.series('download','copy-own-assets'));
+gulp.task('copy-subpages', function () {
+    return gulp.src(['*.html', '!index.html'])
+        .pipe(gulp.dest(packageFolder));
+});
+
+gulp.task('default', gulp.series('download','copy-own-assets','copy-subpages'));
 
