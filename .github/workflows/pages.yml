@@ -33,6 +33,7 @@ jobs:
           npm ci
           npm run predeploy
           git clone https://github.com/Leaflet/Leaflet.git
+          cd Leaflet && git checkout 4d95fa66beb1d8ecb9d65d6f003df4d7f460cf34 && cd ..
           cp -r Leaflet/dist/images dist/assets/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
