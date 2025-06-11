@@ -1,44 +1,255 @@
+/* Modernes, professionelles Redesign */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f9;
+    background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
+    color: #222;
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
 }
 
 h1.title {
     text-align: center;
-    color: #333;
-    margin-top: 20px;
+    color: #1a237e;
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-top: 32px;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px rgba(26,35,126,0.08);
+}
+
+body.dark-mode h1.title {
+    color: #fff;
 }
 
 #map {
-    height: 80vh;
-    margin: 20px auto;
-    max-width: 90%;
-    border: 2px solid #ccc;
-    border-radius: 10px;
+    height: 70vh;
+    margin: 32px auto 0 auto;
+    max-width: 1000px;
+    width: 90vw;
+    border: none;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(26,35,126,0.10);
+    overflow: hidden;
+    min-height: 320px;
+    transition: height 0.3s, width 0.3s;
 }
 
 .route-button {
-    display: inline-block;
-    padding: 10px 20px;
-    margin-top: 10px;
-    background-color: #007bff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 28px;
+    margin-top: 16px;
+    background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
     color: #fff;
-    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(25,118,210,0.10);
+    transition: background 0.2s, box-shadow 0.2s;
 }
 
 .route-button:hover {
-    background-color: #0056b3;
+    background: linear-gradient(90deg, #1565c0 0%, #1976d2 100%);
+    box-shadow: 0 4px 16px rgba(25,118,210,0.18);
 }
 
 .route-icon {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     vertical-align: middle;
-    margin-right: 5px;
+    margin-right: 6px;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(30, 41, 59, 0.25);
+    backdrop-filter: blur(2px);
+    transition: background 0.3s;
+}
+
+.modal-content {
+    background: #fff;
+    margin: 10% auto;
+    padding: 32px 28px 24px 28px;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(26,35,126,0.12);
+    max-width: 420px;
+    width: 90vw;
+    text-align: center;
+    animation: modalIn 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+@keyframes modalIn {
+    0% { transform: scale(0.8) translateY(40px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #1a237e;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.modal-content p {
+    /*color: #374151;*/
+    font-size: 1.05rem;
+    margin-bottom: 18px;
+}
+
+.modal-content button {
+    background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
+    color: #fff;
+    padding: 10px 24px;
+    margin: 10px 8px 0 8px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(25,118,210,0.10);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.modal-content button:hover {
+    background: linear-gradient(90deg, #1565c0 0%, #1976d2 100%);
+    box-shadow: 0 4px 16px rgba(25,118,210,0.18);
+}
+
+#gdpr-link {
+    position: fixed;
+    bottom: 18px;
+    right: 24px;
+    font-size: 15px;
+    color: #1976d2;
+    text-decoration: none;
+    background: #fff;
+    padding: 6px 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(25,118,210,0.08);
+    transition: background 0.2s, color 0.2s;
+}
+
+#gdpr-link:hover {
+    background: #1976d2;
+    color: #fff;
+}
+
+/* Dark Mode Support */
+body.dark-mode {
+    background: linear-gradient(120deg, #181c24 0%, #232b36 100%);
+    color: #e3e6eb;
+}
+
+body.dark-mode h1.title {
+    color: #90caf9;
+    text-shadow: 0 2px 8px rgba(144,202,249,0.08);
+}
+
+body.dark-mode .modal-content {
+    background: #232b36;
+    color: #e3e6eb;
+    box-shadow: 0 8px 32px rgba(30,41,59,0.32);
+}
+
+body.dark-mode .modal-content h2 {
+    color: #90caf9;
+}
+
+body.dark-mode .modal-content p {
+    color: #b0b8c1;
+}
+
+body.dark-mode .modal-content button,
+body.dark-mode .route-button {
+    background: linear-gradient(90deg, #263859 0%, #1976d2 100%);
+    color: #fff;
+}
+
+body.dark-mode .modal-content button:hover,
+body.dark-mode .route-button:hover {
+    background: linear-gradient(90deg, #1565c0 0%, #263859 100%);
+}
+
+body.dark-mode #gdpr-link {
+    background: #232b36;
+    color: #90caf9;
+    box-shadow: 0 2px 8px rgba(30,41,59,0.18);
+}
+
+body.dark-mode #gdpr-link:hover {
+    background: #1976d2;
+    color: #fff;
+}
+
+/* Map Responsive Scaling */
+#map {
+    height: 70vh;
+    margin: 32px auto 0 auto;
+    max-width: 1000px;
+    width: 90vw;
+    border: none;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(26,35,126,0.10);
+    overflow: hidden;
+    min-height: 320px;
+    transition: height 0.3s, width 0.3s;
+}
+
+@media (max-width: 900px) {
+    #map {
+        height: 55vh;
+        max-width: 98vw;
+    }
+}
+@media (max-width: 600px) {
+    #map {
+        height: 40vh;
+        min-height: 200px;
+        max-width: 100vw;
+        width: 98vw;
+    }
+}
+
+/* Optional: Dark mode for Leaflet controls */
+body.dark-mode .leaflet-control,
+body.dark-mode .leaflet-bar,
+body.dark-mode .leaflet-control-geocoder {
+    background: #232b36 !important;
+    color: #e3e6eb !important;
+    border-color: #263859 !important;
+}
+body.dark-mode .leaflet-control a {
+    color: #90caf9 !important;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    h1.title {
+        font-size: 2rem;
+        margin-top: 18px;
+    }
+    #map {
+        height: 55vh;
+        margin: 18px auto 0 auto;
+    }
+    .modal-content {
+        padding: 18px 8px 14px 8px;
+    }
 }
