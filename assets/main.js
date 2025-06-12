@@ -30,33 +30,60 @@ document.getElementById('consentNo').addEventListener('click', function() {
     window.location.href = 'error.html';
 });
 
+function showLoadingScreen() {
+    let loading = document.getElementById('loadingScreen');
+    if (!loading) {
+        loading = document.createElement('div');
+        loading.id = 'loadingScreen';
+        loading.innerHTML = `<div class="loading-content"><div class="spinner"></div><div class="loading-text">Loading map and location ...</div></div>`;
+        document.body.appendChild(loading);
+    }
+    loading.style.display = 'flex';
+}
+
+function hideLoadingScreen() {
+    const loading = document.getElementById('loadingScreen');
+    if (loading) loading.style.display = 'none';
+}
+
 function initializeMapWithConsent() {
     if (map) {
         removeMap(); // Remove the existing map instance
     }
+    showLoadingScreen();
+    navigator.geolocation.getCurrentPosition(function(position) {
+        updateMap(position);
+        // hideLoadingScreen is now called only after map is initialized with real coordinates
+    }, function(error) {
+        handleGeolocationError(error);
+        // hideLoadingScreen will be called after fallback
+    });
+}
 
-    // disable current logic until another geoip service is found
-
-    // First, find location from IP
-    // findLocationFromIP().then(() => {
-    //     // Then, if geolocation is supported, ask the user for their location
-    //     if (GEOLOCATION_SUPPORTED) {
-    //         navigator.geolocation.getCurrentPosition(updateMap, handleGeolocationError);
-    //     }
-    //     else {
-    //         handleIPGeolocationError();
-    //     }
-    // });
-    navigator.geolocation.getCurrentPosition(updateMap, handleGeolocationError);
+function updateMap(position) {
+    console.log("Geolocation position:", position);
+    let center = normalizeCoordinates(position);
+    if (!map) {
+        initializeMap(position);
+        hideLoadingScreen(); // Only hide loading after map is initialized with actual coordinates
+    } else {
+        map.setView(center, 13);
+        map.panTo(center);
+        findAnimalShelters(center);
+        hideLoadingScreen(); // In case updateMap is called after map is already initialized
+    }
 }
 
 function findLocationFromIP() {
+    showLoadingScreen();
     return new Promise((resolve, reject) => {
         $.get(IP_GEOLOCATION_URL, (position) => {
             initializeMap(position);
+            hideLoadingScreen();
             resolve();
         }).fail(() => {
             handleIPGeolocationError();
+            hideLoadingScreen();
             resolve();
         });
     });
@@ -66,18 +93,7 @@ function handleIPGeolocationError() {
     console.error("Failed to retrieve location from IP address.");
     const defaultLocation = [48.5734053, 13.4503279]; // Fallback to Passau
     initializeMap({ coords: { latitude: defaultLocation[0], longitude: defaultLocation[1] } });
-}
-
-function updateMap(position) {
-    console.log("Geolocation position:", position);
-    let center = normalizeCoordinates(position);
-    if (!map) {
-        initializeMap(position);
-    } else {
-        map.setView(center, 13);
-        map.panTo(center);
-        findAnimalShelters(center);
-    }
+    hideLoadingScreen();
 }
 
 function handleGeolocationError(error) {
@@ -104,6 +120,7 @@ function linkify(text) {
         return `<a href="${url.startsWith('http') ? url : `https://${url}`}" target="_blank">${url}</a>`;
     });
 }
+
 
 function initializeMap(position) {
     if (map) {
@@ -133,6 +150,7 @@ function initializeMap(position) {
         .addTo(map);
 
     findAnimalShelters(center);
+    hideLoadingScreen(); // Hide loading only after map is initialized with coordinates
 }
 
 function removeMap() {
