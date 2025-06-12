@@ -69,14 +69,19 @@ function handleIPGeolocationError() {
 }
 
 function updateMap(position) {
+    console.log("Geolocation position:", position);
     let center = normalizeCoordinates(position);
-    map.setView(center, 13);
-    map.panTo(center);
-    findAnimalShelters(center);
+    if (!map) {
+        initializeMap(position);
+    } else {
+        map.setView(center, 13);
+        map.panTo(center);
+        findAnimalShelters(center);
+    }
 }
 
 function handleGeolocationError(error) {
-    //console.error(error);
+    console.error("Handling geolocation error: "+error);
     findLocationFromIP();
 }
 
@@ -85,6 +90,7 @@ function normalizeCoordinates(position) {
     if (position.coords) {
         // Geolocation API
         center = [position.coords.latitude, position.coords.longitude];
+        console.log("Using Geolocation API coordinates:", center);
     } else {
         // IP geolocation service
         center = [position.latitude, position.longitude];
