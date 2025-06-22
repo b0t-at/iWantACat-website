@@ -14,8 +14,6 @@
   },
   "scripts": {
     "predeploy": "gulp",
-    "minify-css": "gulp minify-css",
-    "minify-js": "gulp minify-js",
     "dev": "live-server --watch=index.html,assets --port=8080"
   },
   "repository": {

@@ -7,7 +7,7 @@ const staticAssetsFolder = 'assets';
 gulp.task('download', function () {
     return gulp.src('index.html')
         .pipe(cheerio(function ($, file) {
-            $('link[rel="stylesheet"], script[src], img[src]').each(function () {
+            $('link[rel="stylesheet"], link[rel="icon"], script[src], img[src]').each(function () {
                 var url = $(this).attr('href') || $(this).attr('src');
                 if (url && url.startsWith('http')) {
                     var fileName = url.split('/').pop();
