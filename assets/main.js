@@ -4,11 +4,15 @@
 // Define constants for the map and geolocation services
 const MAP_ID = 'map';
 const GEOLOCATION_SUPPORTED = navigator.geolocation ? true : false;
-const IP_GEOLOCATION_URL = "https://ipapi.co/json/";
+const IP_GEOLOCATION_URL = "https://get.geojs.io/v1/ip/geo.json";
 const OVERPASS_API_URL = "https://overpass-api.de/api/interpreter";
 
 // Initialize the map
 let map;
+
+let IPGeolocation;
+let lastIPAddress;
+let lastQueryUserLocation;
 
 // Check for consent cookie
 const consentCookie = getCookie('userConsent');
@@ -52,7 +56,7 @@ function initializeMapWithConsent() {
     }
     showLoadingScreen();
     navigator.geolocation.getCurrentPosition(function(position) {
-        updateMap(position);
+        updateMapWithGeolocation(position);
         // hideLoadingScreen is now called only after map is initialized with real coordinates
     }, function(error) {
         handleGeolocationError(error);
@@ -60,22 +64,25 @@ function initializeMapWithConsent() {
     });
 }
 
-function updateMap(position) {
+function updateMapWithGeolocation(position) {
     console.log("Geolocation position:", position);
     let center = normalizeCoordinates(position);
     if (!map) {
         initializeMap(position);
         hideLoadingScreen(); // Only hide loading after map is initialized with actual coordinates
     } else {
-        map.setView(center, 13);
-        map.panTo(center);
+        //map.setView(center, 13);
+        console.log("Moving map to geolocation position");
+        //map.panTo(center);
         findAnimalShelters(center);
-        hideLoadingScreen(); // In case updateMap is called after map is already initialized
+        hideLoadingScreen(); // In case updateMapWithGeolocation is called after map is already initialized
     }
 }
 
-function findLocationFromIP() {
-    showLoadingScreen();
+function findLocationFromIP(loadingScreen = true) {
+    if (loadingScreen) {
+        showLoadingScreen();
+    }
     return new Promise((resolve, reject) => {
         $.get(IP_GEOLOCATION_URL, (position) => {
             initializeMap(position);
@@ -97,7 +104,8 @@ function handleIPGeolocationError() {
 }
 
 function handleGeolocationError(error) {
-    console.error("Handling geolocation error: "+error);
+    console.log("Handling geolocation error");
+    console.log(error);
     findLocationFromIP();
 }
 
@@ -110,6 +118,9 @@ function normalizeCoordinates(position) {
     } else {
         // IP geolocation service
         center = [position.latitude, position.longitude];
+        lastIPAddress = position.ip;
+        IPGeolocation = center;
+        console.log("Using IP API coordinates:", center);
     }
     return center;
 }
@@ -127,8 +138,10 @@ function initializeMap(position) {
         removeMap(); // Remove the existing map instance
     }
     let center = normalizeCoordinates(position);
+    console.log("Initializing map with center:", center);
     map = L.map(MAP_ID).setView(center, 13);
     map.panTo(center);
+    console.log("Moving map to initial position");
 
     // Add OpenStreetMap tile layer to the map
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -163,23 +176,30 @@ function removeMap() {
 function findAnimalShelters(center) {
     const latitude = center.lat || center[0];
     const longitude = center.lng || center[1];
-    const query = `[out:json][timeout:25];(node["amenity"="animal_shelter"](around:50000,${latitude},${longitude}););out body;`;
-
+    const query = `[out:json][timeout:25];(node["amenity"="animal_shelter"]["animal_shelter"!="bird"]["animal_shelter:sanctuary"!="yes"](around:50000,${latitude},${longitude}););out body;`;
+    lastQueryUserLocation = {lat: latitude, lon: longitude};
     $.get(OVERPASS_API_URL, { data: query }, handleOverpassResponse)
         .fail(handleOverpassError);
 }
 
 function handleOverpassResponse(data) {
-    data.elements.forEach(element => {
+    let sortedData =  data.elements.sort((a, b) => 
+  haversineDistance(lastQueryUserLocation,  a) - haversineDistance(lastQueryUserLocation,  b)
+);
+    sortedData.forEach((element, index) => {
         const name = element.tags.name || 'Unknown Animal Shelter';
         const info = Object.keys(element.tags)
             .map(key => `<div><tt>${key}: ${linkify(element.tags[key])}</tt></div>`)
             .join('\n');
 
         const marker = L.marker([element.lat, element.lon]).addTo(map)
-            .bindPopup(`<b>${name}</b><div>${info}</div><button class="route-button" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${element.lat},${element.lon}', '_blank')"><img src="https://cdn-icons-png.flaticon.com/512/1483/1483336.png" alt="Navigation Logo" class="route-icon"> Route to ${name}</button>`)
-            .openPopup();
-        map.panTo([element.lat, element.lon]);
+            .bindPopup(`<b>${name}</b><div>${info}</div><button class="route-button" onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${element.lat},${element.lon}', '_blank')"><img src="https://cdn-icons-png.flaticon.com/512/1483/1483336.png" alt="Navigation Logo" class="route-icon"> Route to ${name}</button>`);
+            
+        if (index === 0) {
+            marker.openPopup(); // Open popup for the first marker
+            map.panTo([element.lat, element.lon]);
+            console.log("Moving map to: ",name, " at coordinates: ", element.lat, element.lon);
+        }
     });
 }
 
@@ -226,4 +246,31 @@ darkModeToggle.addEventListener('click', function(e) {
 // Initial state
 if (localStorage.getItem(darkModeKey) === 'on' || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     setDarkMode(true);
+}
+
+const atan2 = Math.atan2
+const cos = Math.cos
+const sin = Math.sin
+const sqrt = Math.sqrt
+const PI = Math.PI
+
+// equatorial mean radius of Earth (in meters)
+const R = 6378137
+
+function squared (x) { return x * x }
+function toRad (x) { return x * PI / 180.0 }
+function hav (x) {
+  return squared(sin(x / 2))
+}
+
+// https://www.npmjs.com/package/haversine-distance
+// hav(theta) = hav(bLat - aLat) + cos(aLat) * cos(bLat) * hav(bLon - aLon)
+function haversineDistance (a, b) {
+  const aLat = toRad(Array.isArray(a) ? a[1] : a.latitude ?? a.lat)
+  const bLat = toRad(Array.isArray(b) ? b[1] : b.latitude ?? b.lat)
+  const aLng = toRad(Array.isArray(a) ? a[0] : a.longitude ?? a.lng ?? a.lon)
+  const bLng = toRad(Array.isArray(b) ? b[0] : b.longitude ?? b.lng ?? b.lon)
+
+  const ht = hav(bLat - aLat) + cos(aLat) * cos(bLat) * hav(bLng - aLng)
+  return 2 * R * atan2(sqrt(ht), sqrt(1 - ht))
 }
