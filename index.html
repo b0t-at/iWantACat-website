@@ -1,38 +1,55 @@
-<!DOCTYPE html>
-<html>
-
-<head>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>I want a cat! – Animal shelters near you</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Inter:wght@400;600;700&display=swap">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-    <link rel="stylesheet" href="assets/styles.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-    <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
-    <!-- Modernes Favicon (optional) -->
-    <link rel="icon" type="image/svg+xml" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f408.svg">
-    <meta name="theme-color" content="#1976d2">
-</head>
+    <meta name="description" content="Find animal shelters near you and adopt a cat. Free, open-source and based on OpenStreetMap data." />
+    <meta name="theme-color" content="#1976d2" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script>
+      try {
+        const t = localStorage.getItem('theme');
+        document.documentElement.dataset.theme = t === 'dark' || t === 'light' ? t : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      } catch {}
+    </script>
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div>
+        <h1 class="title"><a href="/">🐾 I want a cat!</a></h1>
+        <p class="tagline">Find animal shelters near you</p>
+      </div>
+      <button id="theme-toggle" class="icon-button" type="button">🌙</button>
+    </header>
 
-<body>
-    <h1 class="title">🐾 I want a cat!<br><span style="font-size:1.1rem;font-weight:400;">Find animal shelters near you</span></h1>
-    <div id="map"></div>
+    <main class="layout">
+      <section class="panel controls" aria-label="Find shelters">
+        <form id="search-form" class="search" role="search">
+          <label class="visually-hidden" for="search-input">City, address or postcode</label>
+          <input id="search-input" type="search" name="q" placeholder="City, address or postcode" autocomplete="off" enterkeyhint="search" required />
+          <button class="button button-primary" type="submit">Search</button>
+        </form>
+        <div class="divider"><span>or</span></div>
+        <button id="locate-button" class="button button-secondary locate" type="button">📍 Use my location</button>
+        <div id="place-results" class="place-results" hidden></div>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+      </section>
 
-    <!-- Consent Modal -->
-    <div id="consentModal" class="modal">
-        <div class="modal-content">
-            <h2>Location sharing</h2>
-            <p>In order to find animal shelters near you, we need your consent to location tracking.<br>You can find more information in our <a href="gdpr.html" target="_blank" style="color:#1976d2;text-decoration:underline;">Privacy Policy</a>.</p>
-            <button id="consentYes">Agree</button>
-            <button id="consentNo">Refuse</button>
-        </div>
-    </div>
+      <div id="map" class="map" role="region" aria-label="Map of animal shelters"></div>
 
-    <a href="#" id="toggle-darkmode" style="position:fixed;top:18px;right:24px;z-index:1100;background:#fff;color:#1976d2;padding:7px 18px;border-radius:8px;box-shadow:0 2px 8px rgba(25,118,210,0.08);font-weight:600;text-decoration:none;transition:background 0.2s,color 0.2s;">🌙 Dark Mode</a>
-    <script src="assets/main.js"></script>
-    <a href="gdpr.html" id="gdpr-link" target="_blank">GDPR</a>
-</body>
+      <section class="panel results" aria-label="Nearby animal shelters">
+        <ol id="shelter-list" class="shelter-list"></ol>
+        <p id="data-note" class="data-note" hidden></p>
+      </section>
+    </main>
 
+    <footer class="site-footer">
+      <span>Shelter data &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors</span>
+      <span>Missing a shelter? <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">Add it to OpenStreetMap</a></span>
+      <a href="/gdpr.html">Privacy policy</a>
+      <a href="https://github.com/b0t-at/iWantACat-website" target="_blank" rel="noopener noreferrer">Source code</a>
+    </footer>
+  </body>
 </html>

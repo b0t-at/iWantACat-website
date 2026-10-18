@@ -1,29 +1,38 @@
 {
   "name": "iwantacat-website",
-  "version": "0.99.0",
-  "description": "animal shelter finder",
-  "main": "gulpfile.js",
-  "devDependencies": {
-    "bootstrap": "^5.1.3",
-    "gulp": "^5.0.1",
-    "gulp-cheerio": "^1.0.0",
-    "gulp-download": "^0.0.1",
-    "gulp-useref": "^5.0.0",
-    "live-server": "^1.2.2",
-    "sass": "^1.32.13"
+  "version": "1.0.0",
+  "private": true,
+  "description": "Find animal shelters near you – iwanta.cat",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18.0"
   },
   "scripts": {
-    "predeploy": "gulp",
-    "dev": "live-server --watch=index.html,assets --port=8080"
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "data": "node scripts/fetch-shelters.ts"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/b0t-at/iWantACat-website.git"
   },
-  "author": "",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/b0t-at/iWantACat-website/issues"
   },
-  "homepage": "https://github.com/b0t-at/iWantACat-website#readme"
+  "homepage": "https://iwanta.cat",
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "leaflet": "^1.9.4"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.22",
+    "@types/node": "^22.20.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.5"
+  }
 }
