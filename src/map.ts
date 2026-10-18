@@ -26,7 +26,19 @@ export class ShelterMap {
 
   constructor(element: HTMLElement, onSelect: (id: string) => void) {
     this.onSelect = onSelect;
-    this.map = L.map(element, { zoomControl: true }).setView(INITIAL_VIEW, INITIAL_ZOOM);
+    this.map = L.map(element, {
+      zoomControl: true,
+      minZoom: 2,
+      // Keep the view within the tiled latitudes so no empty area shows above/below the poles.
+      maxBounds: [
+        [-85, -540],
+        [85, 540],
+      ],
+      maxBoundsViscosity: 1,
+      worldCopyJump: true,
+    }).setView(INITIAL_VIEW, INITIAL_ZOOM);
+    // Keep Leaflet in sync when the layout changes the container size.
+    new ResizeObserver(() => this.map.invalidateSize()).observe(element);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -74,9 +86,5 @@ export class ShelterMap {
     if (!marker) return;
     this.map.setView(marker.getLatLng(), Math.max(this.map.getZoom(), 13));
     marker.openPopup();
-  }
-
-  invalidateSize(): void {
-    this.map.invalidateSize();
   }
 }

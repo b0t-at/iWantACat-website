@@ -179,8 +179,6 @@ els.list.addEventListener('click', (event) => {
   map.select(id);
 });
 
-narrowScreen.addEventListener('change', () => map.invalidateSize());
-
 if (storage.get(STORAGE_KEYS.autoLocate) === 'yes') {
   void useMyLocation();
 } else {
