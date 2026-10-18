@@ -1,50 +1,108 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy policy – I want a cat!</title>
+    <meta name="theme-color" content="#1976d2" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script>
+      try {
+        const t = localStorage.getItem('theme');
+        document.documentElement.dataset.theme = t === 'dark' || t === 'light' ? t : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      } catch {}
+    </script>
+    <script type="module" src="/src/page.ts"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div>
+        <p class="title"><a href="/">🐾 I want a cat!</a></p>
+        <p class="tagline">Find animal shelters near you</p>
+      </div>
+      <button id="theme-toggle" class="icon-button" type="button">🌙</button>
+    </header>
 
-<head>
-    <title>GDPR Policy</title>
-    <link rel="stylesheet" href="assets/styles.css" />
-</head>
+    <main class="panel content">
+      <h1>Privacy policy</h1>
+      <p>
+        iwanta.cat is a free, open-source website without accounts, tracking, analytics or advertising.
+        This page explains which data is processed when you use it.
+      </p>
 
-<body>
-    <div class="container">
-        <h1 class="title">GDPR Policy</h1>
-        <div class="content">
-            <h2>External Services Used</h2>
-            <h3>Map Service</h3>
-            <p><strong>Service Name:</strong> OpenStreetMap</p>
-            <p><strong>Service URL:</strong> <a href="https://www.openstreetmap.org" target="_blank">https://www.openstreetmap.org</a></p>
-            <p><strong>Purpose:</strong> Displaying maps and geographical data</p>
-            <p><strong>Data Collected:</strong> IP address, location data</p>
-            <p><strong>Data Usage:</strong> To provide map and location services</p>
-            <p><strong>Data Retention:</strong> As per OpenStreetMap's privacy policy</p>
-            <p><strong>Privacy Policy:</strong> <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank">OpenStreetMap Privacy Policy</a></p>
+      <h2>Your location</h2>
+      <p>
+        Your location is only used after you click <em>“Use my location”</em> or search for a place.
+        The list of animal shelters is downloaded as a whole and the nearest shelters are calculated
+        <strong>in your browser</strong> – your location is not sent to us.
+      </p>
 
-            <h3>Overpass API</h3>
-            <p><strong>Service Name:</strong> Overpass API</p>
-            <p><strong>Service URL:</strong> <a href="https://overpass-api.de" target="_blank">https://overpass-api.de</a></p>
-            <p><strong>Purpose:</strong> Querying OpenStreetMap data for specific features</p>
-            <p><strong>Data Collected:</strong> IP address, query data</p>
-            <p><strong>Data Usage:</strong> To retrieve map feature data based on user queries</p>
-            <p><strong>Data Retention:</strong> As per OpenStreetMap's privacy policy</p>
+      <h2>External services</h2>
+      <p>Your browser connects directly to the following services. Like any web server, they receive your IP address.</p>
 
-            <h3>Geolocation Service</h3>
-            <p><strong>Service Name:</strong> geojs.io</p>
-            <p><strong>Service URL:</strong> <a href="https://geojs.io" target="_blank">https://geojs.io</a></p>
-            <p><strong>Purpose:</strong> Identifying user location based on IP address</p>
-            <p><strong>Data Collected:</strong> IP address, location data</p>
-            <p><strong>Data Usage:</strong> To provide geolocation services</p>
-            <p><strong>Data Retention:</strong> As per geojs.io privacy policy</p>
-            <p><strong>Privacy Policy:</strong> <a href="https://www.geojs.io/privacy/" target="_blank">geojs.io Privacy Policy</a></p>
+      <h3>Hosting – GitHub Pages</h3>
+      <dl>
+        <dt>Provider</dt><dd>GitHub, Inc.</dd>
+        <dt>Purpose</dt><dd>Delivering this website</dd>
+        <dt>Data</dt><dd>IP address, requested pages, browser information (server logs)</dd>
+        <dt>Privacy policy</dt><dd><a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">GitHub Privacy Statement</a></dd>
+      </dl>
 
-            
-            <h3>Data Usage</h3>
-            <p>We use the collected data to provide map and geolocation services to our users. The data is used solely for the purpose of enhancing user experience and providing accurate location-based information.</p>
+      <h3>Map tiles – OpenStreetMap</h3>
+      <dl>
+        <dt>Provider</dt><dd>OpenStreetMap Foundation</dd>
+        <dt>Purpose</dt><dd>Displaying the map</dd>
+        <dt>Data</dt><dd>IP address, the map area you view</dd>
+        <dt>Privacy policy</dt><dd><a href="https://osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer">OSMF Privacy Policy</a></dd>
+      </dl>
 
-            <h2>Cookies</h2>
-            <p>We save a cookie to remember whether the GDPR was accepted. This cookie is used to skip the consent modal if the user has already consented.</p>
-        </div>
-    </div>
-</body>
+      <h3>Place search – Nominatim</h3>
+      <dl>
+        <dt>Provider</dt><dd>OpenStreetMap Foundation</dd>
+        <dt>Purpose</dt><dd>Finding the coordinates of a place you search for</dd>
+        <dt>Data</dt><dd>IP address, your search text</dd>
+        <dt>When</dt><dd>Only when you use the search field</dd>
+        <dt>Privacy policy</dt><dd><a href="https://osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer">OSMF Privacy Policy</a></dd>
+      </dl>
 
+      <h3>Approximate location – geojs.io</h3>
+      <dl>
+        <dt>Provider</dt><dd>geojs.io</dd>
+        <dt>Purpose</dt><dd>Estimating your location from your IP address</dd>
+        <dt>Data</dt><dd>IP address</dd>
+        <dt>When</dt><dd>Only after you click “Use my location” and your browser cannot determine your position (this is not used if you deny location access)</dd>
+        <dt>Privacy policy</dt><dd><a href="https://www.geojs.io/privacy/" target="_blank" rel="noopener noreferrer">geojs.io Privacy Policy</a></dd>
+      </dl>
+
+      <h3>Fallback shelter search – Overpass API</h3>
+      <dl>
+        <dt>Providers</dt><dd><a href="https://overpass-api.de" target="_blank" rel="noopener noreferrer">overpass-api.de</a> (FOSSGIS e.V.), <a href="https://overpass.private.coffee" target="_blank" rel="noopener noreferrer">overpass.private.coffee</a></dd>
+        <dt>Purpose</dt><dd>Searching OpenStreetMap for animal shelters near a location</dd>
+        <dt>Data</dt><dd>IP address, the searched location</dd>
+        <dt>When</dt><dd>Only if the prebuilt shelter list cannot be loaded</dd>
+      </dl>
+
+      <h3>External links</h3>
+      <p>
+        Links to directions (Google Maps), OpenStreetMap or shelter websites open the respective third-party
+        site, whose own privacy policy applies.
+      </p>
+
+      <h2>Local storage</h2>
+      <p>
+        No cookies are used. Your browser’s local storage remembers your colour theme and – if you used
+        “Use my location” – that your location should be looked up automatically on your next visit.
+        This data never leaves your device.
+      </p>
+      <p><button id="reset-preferences" class="button button-secondary" type="button">Forget my preferences</button> <span id="reset-status" role="status"></span></p>
+
+      <h2>Contact</h2>
+      <p>Questions or concerns? Please open an issue on <a href="https://github.com/b0t-at/iWantACat-website/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+    </main>
+
+    <footer class="site-footer">
+      <a href="/">Find shelters</a>
+      <a href="https://github.com/b0t-at/iWantACat-website" target="_blank" rel="noopener noreferrer">Source code</a>
+    </footer>
+  </body>
 </html>

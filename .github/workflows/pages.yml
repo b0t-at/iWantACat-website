@@ -3,6 +3,9 @@ name: Deploy GH Pages
 on:
   push:
     branches: [ main ]
+  schedule:
+    # Weekly refresh of the animal shelter dataset from OpenStreetMap.
+    - cron: '17 3 * * 1'
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -18,27 +21,40 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Test
+        run: npm test
+      - name: Fetch shelter data
+        # Falls back to the currently published dataset if Overpass is unavailable.
+        run: npm run data -- --fallback-url=https://iwanta.cat/data/shelters.json
+        timeout-minutes: 30
+      - name: Build
+        run: npm run build
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: 'dist/'
+
   deploy:
+    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-      - name: Setup Pages
-        uses: actions/configure-pages@v6
-      - name: Build
-        run: |
-          npm ci
-          npm run predeploy
-          git clone https://github.com/Leaflet/Leaflet.git
-          cd Leaflet && git checkout 4d95fa66beb1d8ecb9d65d6f003df4d7f460cf34 && cd ..
-          cp -r Leaflet/dist/images dist/assets/
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: 'dist/'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
